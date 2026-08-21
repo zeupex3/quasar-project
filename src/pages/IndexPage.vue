@@ -1,29 +1,37 @@
 <template>
   <q-page class="q-pa-md">
-    <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+    <q-form
+      class="q-gutter-md"
+      style="max-width: 600px"
+      @submit.prevent="onSubmit"
+      @reset="onReset"
+    >
       <q-input
         v-model="name"
+        filled
         label="Your name *"
         hint="Name and surname"
-        lazy-rules
-        :rules="[val => !!val || 'Please enter your name']"
       />
 
       <q-input
-        v-model.number="age"
-        label="Your age *"
+        v-model="age"
+        filled
         type="number"
-        lazy-rules
-        :rules="[val => !!val || 'Please enter your age']"
+        label="Your age *"
       />
 
-      <q-checkbox
+      <q-toggle
         v-model="accept"
         label="I accept the license and terms"
       />
 
       <div>
-        <q-btn label="SUBMIT" type="submit" color="primary" />
+        <q-btn
+          label="SUBMIT"
+          type="submit"
+          color="primary"
+        />
+
         <q-btn
           label="RESET"
           type="reset"
@@ -38,21 +46,31 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useQuasar } from 'quasar'
 
-const name = ref(null)
+const $q = useQuasar()
+
+const name = ref('')
 const age = ref(null)
 const accept = ref(false)
 
 function onSubmit () {
-  console.log('Submitted', {
-    name: name.value,
-    age: age.value,
-    accept: accept.value
+  if (!accept.value) {
+    $q.notify({
+      type: 'negative',
+      message: 'You need to accept the license and terms first'
+    })
+    return
+  }
+
+  $q.notify({
+    type: 'positive',
+    message: 'Submitted successfully'
   })
 }
 
 function onReset () {
-  name.value = null
+  name.value = ''
   age.value = null
   accept.value = false
 }
