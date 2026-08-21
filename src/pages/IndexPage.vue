@@ -1,23 +1,59 @@
 <template>
-  <q-page class="flex flex-center">
-    <div class="column items-center">
-      <img
-        alt="Quasar logo"
-        src="~@/assets/quasar-logo-vertical.svg"
-        style="width: 200px; height: 200px"
+  <q-page class="q-pa-md">
+    <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+      <q-input
+        v-model="name"
+        label="Your name *"
+        hint="Name and surname"
+        lazy-rules
+        :rules="[val => !!val || 'Please enter your name']"
       />
 
-      <q-btn
-        class="q-mt-md"
-        color="primary"
-        to="/second"
-        label="Go to Second Page"
-        no-caps
+      <q-input
+        v-model.number="age"
+        label="Your age *"
+        type="number"
+        lazy-rules
+        :rules="[val => !!val || 'Please enter your age']"
       />
-    </div>
+
+      <q-checkbox
+        v-model="accept"
+        label="I accept the license and terms"
+      />
+
+      <div>
+        <q-btn label="SUBMIT" type="submit" color="primary" />
+        <q-btn
+          label="RESET"
+          type="reset"
+          color="primary"
+          flat
+          class="q-ml-sm"
+        />
+      </div>
+    </q-form>
   </q-page>
 </template>
 
 <script setup>
-//
+import { ref } from 'vue'
+
+const name = ref(null)
+const age = ref(null)
+const accept = ref(false)
+
+function onSubmit () {
+  console.log('Submitted', {
+    name: name.value,
+    age: age.value,
+    accept: accept.value
+  })
+}
+
+function onReset () {
+  name.value = null
+  age.value = null
+  accept.value = false
+}
 </script>
